@@ -2,13 +2,17 @@
 ** EPITECH PROJECT, 2025
 ** sokoban
 ** File description:
-** main
+** sokoban
 */
 
 #include "sokoban.h"
 
-int main(void)
+int sokoban(void)
 {
-    sokoban();
+    initscr();
+    while (true) {
+        refresh();
+    }
+    endwin();
     return 0;
 }
