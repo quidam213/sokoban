@@ -9,6 +9,9 @@
 
 int main(void)
 {
-    sokoban();
+    map_t *map = map_constructor();
+
+    sokoban(map);
+    map_destructor(map);
     return 0;
 }

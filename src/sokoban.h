@@ -34,9 +34,9 @@ typedef struct map_s {
     struct list_s *elements;
 
     //? methods
-    struct element_s * (* get_element) (size_t id);
-    bool (* delete_element) (size_t id);
-    void (* add_element) (struct element_s *);
+    struct element_s * (* get_element) (struct map_s *, size_t);
+    void (* add_element) (struct map_s *, struct element_s *);
+    bool (* delete_element) (struct map_s *, size_t);
 } map_t;
 
 //? FILES
@@ -44,6 +44,11 @@ typedef struct map_s {
 int main(void);
 
 //* sokoban.c
-int sokoban(void);
+int sokoban(map_t *map);
+map_t *map_constructor(void);
+void map_destructor(map_t *this);
+element_t *map_get_element(map_t *this, size_t id);
+void map_add_element(map_t *this, element_t *elt);
+bool map_delete_element(map_t *this, size_t id);
 
 #endif /* !SOKOBAN_H_ */
