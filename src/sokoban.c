@@ -7,7 +7,7 @@
 
 #include "sokoban.h"
 
-map_t *map_constructor(void)
+map_t *map_constructor(char **content)
 {
     map_t *this = malloc(sizeof(map_t));
 

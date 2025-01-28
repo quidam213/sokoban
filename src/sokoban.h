@@ -10,6 +10,9 @@
 
 //? INCLUDES
 #include <ncurses.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include "linkedlist/linkedlist.h"
 
 //? STRUCTURES
@@ -41,14 +44,20 @@ typedef struct map_s {
 
 //? FILES
 //* main.c
-int main(void);
+int main(int main, char **av);
 
 //* sokoban.c
 int sokoban(map_t *map);
-map_t *map_constructor(void);
+map_t *map_constructor(char **content);
 void map_destructor(map_t *this);
 element_t *map_get_element(map_t *this, size_t id);
 void map_add_element(map_t *this, element_t *elt);
 bool map_delete_element(map_t *this, size_t id);
+
+//* file.c
+char **parse_file(char *filepath);
+char **my_str_to_word_array(char *str, char *delim);
+size_t count_words(char *str, char *delim);
+void free_string_array(char **array);
 
 #endif /* !SOKOBAN_H_ */
