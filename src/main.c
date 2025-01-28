@@ -47,7 +47,7 @@ int main(int ac, char **av)
     }
     map = map_constructor(file_content);
     free_string_array(file_content);
-    // sokoban(map);
+    sokoban(map);
     map_destructor(map);
     return 0;
 }

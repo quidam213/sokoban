@@ -104,9 +104,13 @@ bool map_delete_element(map_t **this, size_t id)
 int sokoban(map_t *map)
 {
     initscr();
-    // while (true) {
-    //     refresh();
-    // }
+    while (true) {
+        for (list_t *tmp = map->elements; tmp; tmp = tmp->next) {
+            element_t *elt = (element_t *)tmp->data;
+            mvaddch(elt->y, elt->x, elt->type);
+        }
+        refresh();
+    }
     endwin();
     return 0;
 }
