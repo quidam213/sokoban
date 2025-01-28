@@ -7,14 +7,42 @@
 
 #include "sokoban.h"
 
+element_t *init_element(enum type_element type, int x, int y, size_t id)
+{
+    element_t *elt = malloc(sizeof(element_t));
+
+    elt->id = id;
+    elt->type = type;
+    elt->x = x;
+    elt->y = y;
+    return elt;
+}
+
+void free_element(list_t *node)
+{
+    element_t *elt = (element_t *)node->data;
+
+    if (!elt) {
+        return;
+    }
+    free(elt);
+}
+
 map_t *map_constructor(char **content)
 {
     map_t *this = malloc(sizeof(map_t));
+    size_t id = 0;
 
     this->elements = NULL;
     this->get_element = &map_get_element;
     this->add_element = &map_add_element;
     this->delete_element = &map_delete_element;
+    for (size_t i = 0; content[i]; i ++) {
+        for (size_t j = 0; content[i][j]; j ++) {
+            this->add_element(&this, init_element(content[i][j], j, i, id));
+            id ++;
+        }
+    }
     return this;
 }
 
@@ -27,14 +55,14 @@ void map_destructor(map_t *this)
     free(this);
 }
 
-element_t *map_get_element(map_t *this, size_t id)
+element_t *map_get_element(map_t **this, size_t id)
 {
     list_t *tmp;
 
-    if (!this) {
+    if (!(*this)) {
         return NULL;
     }
-    tmp = this->elements;
+    tmp = (*this)->elements;
     while (tmp) {
         element_t *elt = (element_t *)tmp->data;
         if (elt->id == id) {
@@ -45,27 +73,27 @@ element_t *map_get_element(map_t *this, size_t id)
     return NULL;
 }
 
-void map_add_element(map_t *this, element_t *elt)
+void map_add_element(map_t **this, element_t *elt)
 {
-    if (!this) {
+    if (!(*this)) {
         return;
     }
-    add_element(&this->elements, (void *)elt, &base_free_node);
+    add_element(&(*this)->elements, (void *)elt, &free_element);
 }
 
-bool map_delete_element(map_t *this, size_t id)
+bool map_delete_element(map_t **this, size_t id)
 {
     list_t *tmp;
     size_t i = 0;
 
-    if (!this) {
+    if (!(*this)) {
         return false;
     }
-        tmp = this->elements;
+        tmp = (*this)->elements;
     while (tmp) {
         element_t *elt = (element_t *)tmp->data;
         if (elt->id == id) {
-            return delete_element_by_index(&this->elements, i);
+            return delete_element_by_index(&(*this)->elements, i);
         }
         tmp = tmp->next;
         i ++;
@@ -76,9 +104,9 @@ bool map_delete_element(map_t *this, size_t id)
 int sokoban(map_t *map)
 {
     initscr();
-    while (true) {
-        refresh();
-    }
+    // while (true) {
+    //     refresh();
+    // }
     endwin();
     return 0;
 }

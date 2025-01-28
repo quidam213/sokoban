@@ -42,12 +42,12 @@ int main(int ac, char **av)
         return 84;
     }
     file_content = parse_file(av[1]);
-    free_string_array(file_content);
     if (!file_content) {
         return 84;
     }
     map = map_constructor(file_content);
-    sokoban(map);
+    free_string_array(file_content);
+    // sokoban(map);
     map_destructor(map);
     return 0;
 }
