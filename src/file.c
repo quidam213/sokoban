@@ -89,3 +89,16 @@ char **parse_file(char *filepath)
     free(content);
     return array;
 }
+
+size_t array_len(char **array)
+{
+    size_t i = 0;
+
+    if (!array) {
+        return i;
+    }
+    while (array[i]) {
+        i ++;
+    }
+    return i;
+}

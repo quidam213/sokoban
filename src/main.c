@@ -47,6 +47,9 @@ int main(int ac, char **av)
     }
     map = map_constructor(file_content);
     free_string_array(file_content);
+    if (!map || map->countElements(map, PLAYER) != 1) {
+        return 84;
+    }
     sokoban(map);
     map_destructor(map);
     return 0;

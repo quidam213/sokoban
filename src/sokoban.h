@@ -12,8 +12,9 @@
 #include <ncurses.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-
-#include "linkedlist/linkedlist.h"
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 //? STRUCTURES
 enum type_element {
@@ -27,19 +28,19 @@ enum type_element {
 typedef struct element_s {
     //? attributs
     enum type_element type;
-    size_t id;
-    int x;
-    int y;
 } element_t;
 
 typedef struct map_s {
     //? attributs
-    struct list_s *elements;
+    struct element_s ***elts;
 
     //? methods
-    struct element_s * (* get_element) (struct map_s **, size_t);
-    void (* add_element) (struct map_s **, struct element_s *);
-    bool (* delete_element) (struct map_s **, size_t);
+    struct element_s * (* getElement) (struct map_s *, size_t, size_t);
+    size_t (* countElements) (struct map_s *, enum type_element);
+    size_t (* getPlayerX) (struct map_s *);
+    size_t (* getPlayerY) (struct map_s *);
+    size_t (* getHeight) (struct map_s *);
+    size_t (* getWidth) (struct map_s *);
 } map_t;
 
 //? FILES
@@ -48,18 +49,16 @@ int main(int main, char **av);
 
 //* sokoban.c
 int sokoban(map_t *map);
+
+//* map.c
 map_t *map_constructor(char **content);
 void map_destructor(map_t *this);
-element_t *map_get_element(map_t **this, size_t id);
-void map_add_element(map_t **this, element_t *elt);
-bool map_delete_element(map_t **this, size_t id);
-element_t *init_element(enum type_element type, int x, int y, size_t id);
-void free_element(list_t *node);
 
 //* file.c
 char **parse_file(char *filepath);
 char **my_str_to_word_array(char *str, char *delim);
 size_t count_words(char *str, char *delim);
 void free_string_array(char **array);
+size_t array_len(char **array);
 
 #endif /* !SOKOBAN_H_ */
