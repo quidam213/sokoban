@@ -136,6 +136,9 @@ int sokoban(map_t *map)
     keypad(stdscr, TRUE);
     while (true) {
         clear();
+        //! win/lose conds
+        //! center display
+        //! handle when terminal is too small
         display_map(map);
         handle_input(&map, getch());
         refresh();

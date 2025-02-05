@@ -33,6 +33,23 @@ static bool check_args(int ac, char **av)
     return true;
 }
 
+static bool is_valid_map(map_t *map)
+{
+    if (!map) {
+        return false;
+    }
+    if (map->countElements(map, PLAYER) != 1) {
+        return false;
+    }
+    if (map->countElements(map, TARGET) != map->countElements(map, BOX)) {
+        return false;
+    }
+    if (map->countElements(map, POINT)) {
+        return false;
+    }
+    return true;
+}
+
 int main(int ac, char **av)
 {
     map_t *map = NULL;
@@ -47,7 +64,7 @@ int main(int ac, char **av)
     }
     map = map_constructor(file_content);
     free_string_array(file_content);
-    if (!map || map->countElements(map, PLAYER) != 1) {
+    if (!is_valid_map(map)) {
         return 84;
     }
     sokoban(map);
