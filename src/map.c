@@ -60,6 +60,7 @@ static size_t map_get_width(map_t *this)
         if (max_j < j) {
             max_j = j;
         }
+        i ++;
     }
     return j;
 }

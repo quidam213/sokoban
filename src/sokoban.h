@@ -22,7 +22,8 @@ enum type_element {
     PLAYER = 'P',
     WALL = '#',
     BOX = 'X',
-    TARGET = 'O'
+    TARGET = 'O',
+    POINT = 'V'
 };
 
 typedef struct element_s {
