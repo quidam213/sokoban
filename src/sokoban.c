@@ -8,18 +8,36 @@
 #include "sokoban.h"
 
 static void display_map(map_t *map) {
-    size_t i = 0, j;
+    size_t x = 0, y = 0;
+    size_t w = 0, h = 0;
+    size_t i = 0, j, k, l;
 
     if (!map || !map->elts) {
         return;
     }
+    h = map->getHeight(map);
+    w = map->getWidth(map);
+    getmaxyx(stdscr, y, x);
+    if (h > y || w > x) {
+        mvprintw(y, /* (x / 2) - (strlen(SMALL_TERM) / 2) */ x / 2, SMALL_TERM);
+        return;
+    }
+    // k = (y / 2) - (h / 2);
+    k = 0;
     while (map->elts[i]) {
         j = 0;
+        // l = (x / 2) - (w / 2);
+        l = 0;
         while (map->elts[i][j]) {
-            mvaddch(i, j, map->elts[i][j]->type);
+            element_t *elt = map->getElement(map, j, i);
+            if (elt) {
+                mvaddch(k, l, elt->type);
+            }
             j ++;
+            l ++;
         }
         i ++;
+        k ++;
     }
 }
 
@@ -128,15 +146,26 @@ static void handle_input(map_t **map, int input)
     }
 }
 
+static int game_status(map_t *map)
+{
+    size_t n_target = map->countElements(map, TARGET);
+
+    if (!map->countElements(map, TARGET)) {
+        return WIN;
+    }
+    return IDLE;
+}
+
 int sokoban(map_t *map)
 {
+    int st = 0;
+
     initscr();
     noecho();
     cbreak();
     keypad(stdscr, TRUE);
-    while (true) {
+    while (!(st = game_status(map))) {
         clear();
-        //! win/lose conds
         //! center display
         //! handle when terminal is too small
         display_map(map);
@@ -144,5 +173,5 @@ int sokoban(map_t *map)
         refresh();
     }
     endwin();
-    return 0;
+    return st;
 }

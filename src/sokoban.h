@@ -16,6 +16,12 @@
 #include <string.h>
 #include <unistd.h>
 
+#define IDLE 0
+#define WIN 1
+#define LOOSE 2
+
+#define SMALL_TERM "X"
+
 //? STRUCTURES
 enum type_element {
     NOTHING = ' ',

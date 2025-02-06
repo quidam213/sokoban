@@ -67,7 +67,8 @@ int main(int ac, char **av)
     if (!is_valid_map(map)) {
         return 84;
     }
-    sokoban(map);
+    int st = sokoban(map);
     map_destructor(map);
+    printf("game ended : %s\n", st == WIN ? "win" : "lose");
     return 0;
 }
