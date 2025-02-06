@@ -26,15 +26,19 @@ static void display_map(map_t *map) {
 static bool update_xy(int input, size_t *x, size_t *y)
 {
     switch (input) {
+        case 'z':
         case KEY_UP:
             (*y) --;
             break;
+        case 's':
         case KEY_DOWN:
             (*y) ++;
             break;
+        case 'q':
         case KEY_LEFT:
             (*x) --;
             break;
+        case 'd':
         case KEY_RIGHT:
             (*x) ++;
             break;
