@@ -10,7 +10,7 @@
 static void display_map(map_t *map) {
     size_t x = 0, y = 0;
     size_t w = 0, h = 0;
-    size_t i = 0, j, k, l;
+    size_t i = 0, j, k, l, p;
 
     if (!map || !map->elts) {
         return;
@@ -19,22 +19,21 @@ static void display_map(map_t *map) {
     w = map->getWidth(map);
     getmaxyx(stdscr, y, x);
     if (h > y || w > x) {
-        mvprintw(y, /* (x / 2) - (strlen(SMALL_TERM) / 2) */ x / 2, SMALL_TERM);
         return;
     }
-    // k = (y / 2) - (h / 2);
-    k = 0;
+    k = (y / 2) - (h / 2);
     while (map->elts[i]) {
         j = 0;
-        // l = (x / 2) - (w / 2);
-        l = 0;
+        l = (x / 2) - (w / 2);
+        p = 0;
         while (map->elts[i][j]) {
-            element_t *elt = map->getElement(map, j, i);
-            if (elt) {
-                mvaddch(k, l, elt->type);
-            }
+            attron(COLOR_PAIR(map->elts[i][j]->type));
+            mvaddch(k, l + p, ' ');
+            mvaddch(k, l + p + 1, ' ');
+            attron(COLOR_PAIR(NOTHING));
             j ++;
             l ++;
+            p ++;
         }
         i ++;
         k ++;
@@ -143,9 +142,24 @@ static bool handle_movements_input(map_t **map, int input)
     return true;
 }
 
-static void handle_input(map_t **map, int input)
+static bool handle_others_input(map_t **map, int input, int *st)
+{
+    switch (input) {
+        case 27: //? escape key
+            (*st) = LOOSE;
+            break;
+        default:
+            return false;
+    }
+    return true;
+}
+
+static void handle_input(int *st, map_t **map, int input)
 {
     if (handle_movements_input(map, input)) {
+        return;
+    }
+    if (handle_others_input(map, input, st)) {
         return;
     }
 }
@@ -160,22 +174,39 @@ static int game_status(map_t *map)
     return IDLE;
 }
 
-int sokoban(map_t *map)
+static void init_ncurses(void)
 {
-    int st = 0;
-
     initscr();
     noecho();
     cbreak();
     keypad(stdscr, TRUE);
+
+    //? colors
+    start_color();
+    init_pair(NOTHING, COLOR_WHITE, COLOR_BLACK);
+    init_pair(PLAYER, COLOR_BLUE, COLOR_BLUE);
+    init_pair(BOX, COLOR_YELLOW, COLOR_YELLOW);
+    init_pair(POINT, COLOR_GREEN, COLOR_GREEN);
+    init_pair(TARGET, COLOR_MAGENTA, COLOR_MAGENTA);
+    init_pair(WALL, COLOR_RED, COLOR_RED);
+}
+
+static void end_ncurses(void)
+{
+    endwin();
+}
+
+int sokoban(map_t *map)
+{
+    int st = 0;
+
+    init_ncurses();
     while (!(st = game_status(map))) {
         clear();
-        //! center display
-        //! handle when terminal is too small
         display_map(map);
-        handle_input(&map, getch());
+        handle_input(&st, &map, getch());
         refresh();
     }
-    endwin();
+    end_ncurses();
     return st;
 }

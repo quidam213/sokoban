@@ -20,8 +20,6 @@
 #define WIN 1
 #define LOOSE 2
 
-#define SMALL_TERM "X"
-
 //? STRUCTURES
 enum type_element {
     NOTHING = ' ',

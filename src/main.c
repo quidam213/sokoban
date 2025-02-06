@@ -63,12 +63,13 @@ int main(int ac, char **av)
         return 84;
     }
     map = map_constructor(file_content);
-    free_string_array(file_content);
     if (!is_valid_map(map)) {
+        free_string_array(file_content);
         return 84;
     }
     int st = sokoban(map);
     map_destructor(map);
+    free_string_array(file_content);
     printf("game ended : %s\n", st == WIN ? "win" : "lose");
     return 0;
 }
